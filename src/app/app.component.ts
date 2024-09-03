@@ -5,6 +5,7 @@ import { CharactersTableComponent } from './components/characters-table/characte
 import { SwapiService } from './services/swapi.service';
 import { PlanetsTableComponent } from './components/planets-table/planets-table.component';
 import { CommonModule } from '@angular/common';
+import { constants } from '../environments/environments';
 
 @Component({
   selector: 'app-root',
@@ -15,108 +16,85 @@ import { CommonModule } from '@angular/common';
 })
 export class AppComponent {
   title = 'swapi_app';
-  public url: string = 'https://swapi.dev/api';
+  public url: string = constants.swapi_uri_spring_web;
   public resource: string = '/people';
   public characters: Array<any> = [];
   public planets: Array<any> = [];
+  private byNameSaved: string = '';
+  private orderBySaved: string = '';
   searchByNameSaved: string = '';
   sortedBySaved: string = '';
-  limit: number = 10;
+  limit: number = 15;
   offset: number = 0;
   
   constructor(private SwapiService: SwapiService) { }
 
   ngOnInit(): void {
-    this.loadCharacters(`${this.url}/people/?limit=${this.limit}&offset=${this.offset}`);
-    this.loadPlanets(`${this.url}/planets/?limit=${this.limit}&offset=${this.offset}`);
+    this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
   }
 
   public handleSpreadResource(resource: string): void {
     this.resource = resource;
-    this.searchByNameSaved = '';
-    this.sortedBySaved = '';
-    this.limit = 10;
+    this.byNameSaved = '';
+    this.orderBySaved = '';
+    this.limit = 15;
     this.offset = 0;
+    this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
   }
 
   public handleSpreadByName(searchByName: string): void {
-    let urlByName = `${this.url}${this.resource}`;
     if (searchByName) {
-      this.searchByNameSaved = `&byName=${searchByName}`;
-      urlByName += `/?byName=${searchByName}`;
+      this.byNameSaved = searchByName;
     } else {
-      this.searchByNameSaved = '';
+      this.byNameSaved = '';
     }
-    this.limit = 10;
     this.offset = 0;
-    this.loadCharacters(urlByName);
+    this.limit = 15;
+    this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
   }
 
   public handleSpreadOrder(order: string): void {
-    let urlSorted = `${this.url}${this.resource}`;
-    if (order === 'nameMayorMinor') {
-      this.sortedBySaved = '&sortByName=DESC';
-      urlSorted += '/?sortByName=DESC';
-    }
-    else if (order === 'nameMinorMayor') {
-      this.sortedBySaved = '&sortByName=ASC';
-      urlSorted += '/?sortByName=ASC';
-    }
-    else if (order === 'createdMayorMinor') {
-      this.sortedBySaved = '&sortByCreated=DESC';
-      urlSorted += '/?sortByCreated=DESC';
-    }
-    else if (order === 'createdMinorMayor') {
-      this.sortedBySaved = '&sortByCreated=ASC';
-      urlSorted += '/?sortByCreated=ASC';
-    }
-    if (this.searchByNameSaved) {
-      urlSorted += this.searchByNameSaved;
-    }
-    this.limit = 10;
     this.offset = 0;
-    this.loadCharacters(urlSorted);
+    this.limit = 15;
+    this.orderBySaved = order;
+    this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
   }
 
   public handleSpreadFollowing(): void {
-    if (this.characters.length === this.limit) {
-      this.offset = this.offset + this.limit;
+    switch (this.resource) {
+      case '/people':
+        if (this.characters.length === this.limit) {
+          this.offset = this.offset + this.limit;
+          this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
+        }
+        break;
+      case '/planets':
+        if (this.planets.length === this.limit) {
+          this.offset = this.offset + this.limit;
+          this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
+        }
+        break;
+      default: break;
     }
-    let followingUrl = `${this.url}${this.resource}/?limit=${this.limit}&offset=${this.offset}` ;
-    if (this.searchByNameSaved) {
-      followingUrl+= this.searchByNameSaved
-    }
-    if (this.sortedBySaved) {
-      followingUrl+= this.sortedBySaved;
-    }
-    this.loadCharacters(followingUrl);
   }
 
   public handleSpreadPrevious(): void {
     if (this.offset > 0) {
       this.offset = this.offset - this.limit;
+      this.loadData(this.url, this.resource, this.offset, this.limit, this.byNameSaved, this.orderBySaved);
     }
-    let previousUrl = `${this.url}${this.resource}/?limit=${this.limit}&offset=${this.offset}` ;
-    if (this.searchByNameSaved) {
-      previousUrl+= this.searchByNameSaved
-    }
-    if (this.sortedBySaved) {
-      previousUrl+= this.sortedBySaved;
-    }
-    this.loadCharacters(previousUrl);
   }
 
-  public loadCharacters(url: string): void {
-    this.SwapiService.getSwapi(url)
+  public loadData(url: string, resource: string, offset: number, limit: number, byName: string, order: string): void {
+    this.SwapiService.getSwapi2(url, resource, offset, limit, byName, order)
     .subscribe((response: any) => {
-      this.characters = response.results ? response.results : [];
-    });
-  }
-
-  public loadPlanets(url: string): void {
-    this.SwapiService.getSwapi(url)
-    .subscribe((response: any) => {
-      this.planets = response.results ? response.results : [];
+      if (resource === '/people') {
+        this.characters = response.data ? response.data : [];
+        this.characters.forEach((e) => e.created = new Date(Date.parse(e.created)).toUTCString());
+      } else if (resource === '/planets') {
+        this.planets = response.data ? response.data : [];
+        this.planets.forEach((e) => e.created = new Date(Date.parse(e.created)).toUTCString());
+      }
     });
   }
 }

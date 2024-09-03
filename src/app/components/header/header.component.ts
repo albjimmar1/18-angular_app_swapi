@@ -38,6 +38,8 @@ export class HeaderComponent {
 
   onChangeResource($event: any): void {
     $event.preventDefault();
+    this.searchByName = '';
+    this.order = '';
     this.resource = $event.target.value;
     this.spreadResource.emit(this.resource);
   }
