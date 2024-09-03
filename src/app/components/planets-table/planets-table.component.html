@@ -1,0 +1,29 @@
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Rotation period</th>
+            <th>Climate</th>
+            <th>Population</th>
+            <th>Creation date</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let planet of planets">
+            <td>{{ planet.name }}</td>
+            <td>{{ planet.rotation_period }}</td>
+            <td>{{ planet.climate }}</td>
+            <td>{{ planet.population }}</td>
+            <td>{{ planet.created }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<div class="tfoot"> 
+    <li>
+        <button class="btn btn-secondary" (click)="handlePrevious($event)">Previous</button>
+    </li>
+    <li>
+        <button class="btn btn-secondary" (click)="handleFollowing($event)">Following</button>
+    </li>
+</div> 

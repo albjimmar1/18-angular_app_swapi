@@ -1,0 +1,34 @@
+<div class="header">
+    <nav class="menu">
+        <li>
+            <img class="logo" src="https://pngimg.com/uploads/star_wars_logo/star_wars_logo_PNG10.png" />
+        </li>
+        <li>
+            <div class="order">
+                <label>Resources</label>
+                <select id="res" (change)="onChangeResource($event)" [(ngModel)]="resource">
+                    <option value="/people" selected>People</option>
+                    <option value="/planets">Planets</option>
+                </select>
+            </div>
+        </li>
+        <li>
+            <form class="form">
+                <input name="query" type="text" size="40" maxlength="40" placeholder="Skywalker, R2-D2, Chewbacca..." [(ngModel)]="searchByName"/>
+                <button type="submit" (click)="handleSubmit($event)">Search</button>
+            </form>
+        </li>
+        <li>
+            <div class="order">
+                <label>Order by</label>
+                <select id="ordenations" (change)="onChange($event)" [(ngModel)]="order">
+                    <option value="none" hidden></option>
+                    <option value="nameMinorMayor">name ↑</option>
+                    <option value="nameMayorMinor">name ↓</option>
+                    <option value="createdMinorMayor">created ↑</option>
+                    <option value="createdMayorMinor">created ↓</option>
+                </select>
+            </div>
+        </li>
+    </nav>
+</div>

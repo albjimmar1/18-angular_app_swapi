@@ -1,0 +1,82 @@
+@media only screen and (max-width: 480px) {
+    .logo {
+        height: 1rem;
+    }
+}
+
+@media only screen and (min-width: 481px) {
+    .logo {
+        height: 3rem;
+    }
+}
+
+.header {
+    width: 100%;
+    border-bottom: solid 2px black;
+}
+
+.menu {
+    width: auto;
+    margin: 0 2rem 0 2rem;
+    padding: 0;
+    display: flex;
+    list-style: none;
+    align-items: center;
+    align-content: center;
+    justify-content: space-between;
+}
+
+.menu li {
+    font-weight: 600;
+    padding: .5rem;
+    text-align: center;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 20px;
+    padding: 10px;
+}
+
+.form input {
+    border: 1px solid;
+    border-radius: 4px;
+    background-color: transparent;
+}
+
+.form input:hover {
+    background-color: rgb(207, 215, 215);
+}
+
+.form button {
+    border: 1px solid;
+    border-radius: 4px;
+    text-decoration: none;
+    background-color: transparent;
+    text-align: center;
+    display: inline-block;
+}
+
+.form button:hover {
+    background-color: rgb(207, 215, 215);
+}
+  
+.order {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    gap: 5px;
+}
+
+.order select, .order select option {
+    border-radius: 4px;
+    background-color: #e1e3f8;
+}
+
+.order select:hover {
+    background-color: rgb(207, 215, 215);
+}
