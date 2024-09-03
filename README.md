@@ -1,7 +1,7 @@
 # APP functionality
 
 App to display Star Wars characters and planets.<br>
-Dependency with API [link]https://github.com/albjimmar1/17-java_api_swapi<br>
+Dependency with API [swapi](https://github.com/albjimmar1/17-java_api_swapi)<br>
 
 # Technologies
 
